@@ -2,49 +2,24 @@ import logging
 import datetime as dt
 import sys
 
-import os
-from functools import partial
-import torch
-import torch.nn as nn
-
-from transformers import TrainerCallback
 import transformers
-import torch
-
-import pandas as pd
 import os
-from datasets import load_dataset, Dataset
+from datasets import Dataset
 
-from peft import PeftModel
-from peft import prepare_model_for_kbit_training
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     BitsAndBytesConfig,
-    HfArgumentParser,
     TrainingArguments,
-    pipeline,
     logging,
 )
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 from trl import SFTTrainer
 import wandb
 
-def conversation2prompt(conversation, bos_token, eos_token):
-    prompt = ''
-    for line in conversation:
-        prompt += f'{bos_token}{line["role"]}\n{line["content"]}{eos_token}'
-    return prompt
-
-
-
 from utils import gen_train_cfg, print_trainable_parameters, PeftSavingCallback, set_logger
 
 if __name__ == "__main__":
-    # slow drive:
-    # model_cache = '/ext4/model_cache/hf_cache'
-    # fast drive:
-    #model_cache = '/models/model_cache'
     logger = set_logger()
     cfg = gen_train_cfg()
     RANDOM_SEED = cfg['random_seed']
@@ -226,9 +201,9 @@ if __name__ == "__main__":
 
     # Applying chat template
     logger.info('Applying chat template to the train data')
-    train_data = ds1.map(lambda x: {'text': tokenizer.apply_chat_template(x['messages'])}, batched=False)
+    train_data = ds1.map(lambda x: {'text': tokenizer.apply_chat_template(x['messages'], tokenize=False)}, batched=False)
     logger.info('Applying chat template to the validation data')
-    val_data = ds2.map(lambda x: {'text': tokenizer.apply_chat_template(x['messages'])}, batched=False)
+    val_data = ds2.map(lambda x: {'text': tokenizer.apply_chat_template(x['messages'], tokenize=False)}, batched=False)
 
     # drop useless column
     train_data = train_data.remove_columns(['messages'], )

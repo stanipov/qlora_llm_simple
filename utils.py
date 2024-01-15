@@ -53,9 +53,7 @@ def print_trainable_parameters(model):
         all_param += param.numel()
         if param.requires_grad:
             trainable_params += param.numel()
-    #print(
-    #    f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param}"
-    #)
+
     return trainable_params, all_param
 
 def gen_train_cfg():
@@ -68,6 +66,8 @@ def gen_train_cfg():
     # dataset related parameters
     # location of the dataset
     cfg['src'] = '/home/sf/data/py_proj/2023/nlp_playground/datasets/chatml_eds-5-4-2/merged-ds'
+    #'/home/sf/data/py_proj/2023/nlp_playground/datasets/chatml_eds-5-4-2/merged-ds'
+
     # fraction of the whole dataset to be used for validation
     cfg['val_frac'] = 2e-2
 
@@ -141,13 +141,12 @@ def gen_train_cfg():
 
 
     # wandb
-    cfg['wndb'] = {
-        'enable': True,
+    cfg['wandb'] = {
+        'enabled': True,
         'msg': f"""Conversational tune of the base model (Mistral 7B)""",
         'proj_name_core' : 'mistral-rude-bot',
-        'proj_name' : f"{cfg['wndb']['proj_name_core']}-{cfg['experiment_name']}"
+
     }
-
-
+    cfg['wandb']['proj_name'] = f"{cfg['wandb']['proj_name_core']}-{cfg['experiment_name']}"
 
     return cfg
