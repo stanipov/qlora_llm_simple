@@ -79,22 +79,22 @@ def gen_train_cfg():
     cfg['padding'] = True
     cfg['chat_template'] = "{% if not add_generation_prompt is defined %}{% set add_generation_prompt = false %}{% endif %}{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
 
-    cfg['experiment_name'] = 'e8-1_ds6-1'
+    cfg['experiment_name'] = 'e8-1_ds5-4-2'
 
     cfg['model_name'] = "mistralai/Mistral-7B-v0.1"
 
     # train
-    cfg['num_train_epochs'] = 3
+    cfg['num_train_epochs'] = 2
     cfg['per_device_train_batch_size'] = 4
     cfg['per_device_eval_batch_size'] = 4
     cfg['per_device_eval_batch_size'] = 4
     cfg['gradient_accumulation_steps'] = 8
     cfg['gradient_checkpointing'] = False
-    cfg['output_dir'] = f"/ext4/py_proj/llm/experiments/{cfg['experiment_name']}"
+    cfg['output_dir'] = f"/models/finetune/llm/experiments/{cfg['experiment_name']}"
 
-    cfg['save_steps'] = 1000
+    cfg['save_steps'] = 250
     cfg['logging_steps'] = 20
-    cfg['eval_steps'] = 2000
+    cfg['eval_steps'] = 5000
     cfg['save_total_limit'] = None
     cfg['max_grad_norm'] = 0.45
     cfg['learning_rate'] = 1e-5
@@ -131,9 +131,9 @@ def gen_train_cfg():
         "o_proj",
 
         # MLP
-        "gate_proj",
-        "up_proj"
-        "down_proj",
+        #"gate_proj",
+        #"up_proj"
+        #"down_proj",
 
         # Head
         # "lm_head"
@@ -143,7 +143,7 @@ def gen_train_cfg():
     # wandb
     cfg['wandb'] = {
         'enabled': True,
-        'msg': f"""Conversational tune of the base model (Mistral 7B)""",
+        'msg': f"""Conversational tune of the base model (Mistral 7B). Do not tune MLP layers.""",
         'proj_name_core' : 'mistral-rude-bot',
 
     }

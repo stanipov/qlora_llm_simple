@@ -185,7 +185,7 @@ if __name__ == "__main__":
 
     # prepare for PEFT
     logger.info('Preparing for PEFT training')
-    model = prepare_model_for_kbit_training(model)
+#    model = prepare_model_for_kbit_training(model)
     model = get_peft_model(model, lora_config)
     trainable_params, all_param = print_trainable_parameters(model)
     t = f"Trainable params: {trainable_params} || All params: {all_param} || Trainable%: {100 * trainable_params / all_param}"
